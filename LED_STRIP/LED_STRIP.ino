@@ -101,32 +101,27 @@ void loop() {
   // Match the request
  
   int value = LOW;
-  if (request.indexOf("/COUNTDOWN") != -1) {
-  Serial.println("COUNTDOWN");
-   countdown(strip.Color(255,   255,   255), 1000); // Red
-  } 
+
   if (request.indexOf("/BACK") != -1) {
     Serial.println("BACK");
-   back(strip.Color(0,   0,   0), 1000); // Red
+    back(strip.Color(0,   0,   0), 1000); // Red
   } 
-  if (request.indexOf("/THREE") != -1) {
-    Serial.println("BACKTHREE");
-   backthree(strip.Color(0,   0,   0), 1000); // Red
-  } 
-    if (request.indexOf("/TWO") != -1) {
+  if (request.indexOf("/TWO") != -1) {
     Serial.println("TWO");
-   backtwo(strip.Color(0,   0,   0), 1000); // Red
+    backtwo(strip.Color(0,   0,   0), 1000); // Red
   } 
-  if (request.indexOf("/COLLAGE") != -1){
-    Serial.println("COLLAGE");
-   
-   theaterChaseRainbow(30);
+  if (request.indexOf("/collage") != -1){
+    Serial.println("COLLAGE"); 
+    theaterChaseRainbow(30);
   }
-    if (request.indexOf("/PIC") != -1){
-    Serial.println("PIC");
-   rainbow(4);
+  if (request.indexOf("/photo") != -1){
+    Serial.println("PHOTO");
+    rainbow(4);
   }
- 
+  if (request.indexOf("/chroma") != -1){
+    Serial.println("CHROMA");
+    rainbow(4);
+  }
  
  
   // Return the response
@@ -137,12 +132,11 @@ void loop() {
   client.println("<html>");
  
   client.println("<br><br>");
-  client.println("Click <a href=\"/COUNTDOWN\">here</a> to start the countdown<br>");
   client.println("Click <a href=\"/BACK\">here</a> to start the countdownback | BACK<br>");
-  client.println("Click <a href=\"/THREE\">here</a> to start the countdownback| THREE<br>");
   client.println("Click <a href=\"/TWO\">here</a> to start the countdownback | TWO<br>");
-  client.println("Click <a href=\"/COLLAGE\">here</a> to start collage<br>");
-  client.println("Click <a href=\"/PIC\">here</a> to start pic<br>");
+  client.println("Click <a href=\"/collage\">here</a> to start collage<br>");
+  client.println("Click <a href=\"/photo\">here</a> to start photo<br>");
+  client.println("Click <a href=\"/chroma\">here</a> to start chroma photo<br>");
   client.println("</html>");
  
   delay(1);
@@ -157,28 +151,6 @@ void colorWipe(uint32_t color, int wait) {
     delay(wait);                           //  Pause for a moment
   }
 }
-
-void countdown(uint32_t color, int wait){
-  
-  strip.clear();
-  int p=83;
-  
-  for(int i=2;i<strip.numPixels();) { // For each pixel in strip...
-    strip.fill(color,i,9);
-    strip.fill(color,p,9);
-    strip.show(); //  Update strip to match
-    if (i>=47){
-      delay(100);
-      break;
-    }
-      
-    p = p - 9; //  Pause for a moment
-    i = i + 9;
-    delay(wait);
-  } 
-  stripClear();
-}
-
 
 void back(uint32_t color, int wait){
 
@@ -200,32 +172,6 @@ void back(uint32_t color, int wait){
 
     p = p - 9; 
     i = i + 9;
-    delay(wait); 
-  } 
-  stripClear();
-  
-}
-
-void backthree(uint32_t color, int wait){
-
-  strip.fill(strip.Color(255,   255,   255),2,90);
-  strip.show();
-  delay(1000);
-  
-  int p=32;
- 
-  for(int i=47;i<strip.numPixels();) { // For each pixel in strip...
-    strip.fill(color,i,15);
-    strip.fill(color,p,15);
-
-    strip.show();                          //  Update strip to match
-    if (i>=76){
-      delay(100);
-      break;
-    }
-
-    p = p - 15; 
-    i = i + 15;
     delay(wait); 
   } 
   stripClear();
@@ -314,4 +260,3 @@ void stripClear() {
   }
   strip.show();
 }
-  
