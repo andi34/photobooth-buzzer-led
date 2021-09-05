@@ -22,13 +22,13 @@ Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 // ADD SSID AND PASSWORD!!!!
 // *****************************
-const char* ssid = "";
-const char* password = "";
+const char* ssid = "EURE SSID EINTRAGEN";
+const char* password = "EUER PASSWORT FÜR WLAN";
  
 int ledPin = D5;
 
 WiFiServer server(80);
-IPAddress ip(x,x,x,x); // where xx is the desired IP Address
+IPAddress ip(XXX,XXX,XXX,XXX); // where xx is the desired IP Address
 IPAddress gateway(255, 255, 255, 0); // set gateway to match your network
  
 void setup() {
@@ -154,24 +154,24 @@ void colorWipe(uint32_t color, int wait) {
 
 void back(uint32_t color, int wait){
 
-  strip.fill(strip.Color(255,   255,   255),2,90);
+  strip.fill(strip.Color(255,   255,   255),2,60);
   strip.show();
   delay(1000);
   
-  int p=38;
+  int p=60;
  
-  for(int i=47;i<strip.numPixels();) { // For each pixel in strip...
-    strip.fill(color,i,9);
-    strip.fill(color,p,9);
+  for(int i=0;i<strip.numPixels();) { // For each pixel in strip...
+    strip.fill(color,i,12);
+    strip.fill(color,p,0);
 
     strip.show();                          //  Update strip to match
-    if (i>=76){
+    if (i>=60){
       delay(100);
       break;
     }
 
-    p = p - 9; 
-    i = i + 9;
+    p = p - 0; 
+    i = i + 12;
     delay(wait); 
   } 
   stripClear();
@@ -184,20 +184,20 @@ void backtwo(uint32_t color, int wait){
   strip.show();
   delay(1000);
   
-  int p=24;
+  int p=60;
  
-  for(int i=47;i<strip.numPixels();) { // For each pixel in strip...
-    strip.fill(color,i,23);
-    strip.fill(color,p,23);
+  for(int i=0;i<strip.numPixels();) { // For each pixel in strip...
+    strip.fill(color,i,30);
+    strip.fill(color,p,0);
 
     strip.show();                          //  Update strip to match
-    if (i>=70){
+    if (i>=60){
       delay(100);
       break;
     }
 
-    p = p - 23; 
-    i = i + 23;
+    p = p - 0; 
+    i = i + 30;
     delay(wait); 
     Serial.println(p);
     Serial.println(i);
