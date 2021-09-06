@@ -15,7 +15,7 @@
 #define LED_PIN    D4
 
 // How many NeoPixels are attached to the Arduino?
-#define LED_COUNT 94
+#define LED_COUNT 60
 
 // Declare our NeoPixel strip object:
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
@@ -26,6 +26,9 @@ const char* ssid = "EURE SSID EINTRAGEN";
 const char* password = "EUER PASSWORT FÜR WLAN";
  
 int ledPin = D5;
+int ledCount = 60; // NeoPixels attached
+int cntdwnPhoto = 12; // led changing on Photo Countdown (value = ledCount / Countdown in seconds)
+int cntdwnCollage = 30; // led changing on Collage Countdown (value = ledCount / Countdown in seconds)
 
 WiFiServer server(80);
 IPAddress ip(XXX,XXX,XXX,XXX); // where xx is the desired IP Address
@@ -104,11 +107,11 @@ void loop() {
 
   if (request.indexOf("/BACK") != -1) {
     Serial.println("BACK");
-    back(strip.Color(0,   0,   0), 1000); // Red
+    photoled(strip.Color(0,   0,   0), 1000); // Red
   } 
   if (request.indexOf("/TWO") != -1) {
     Serial.println("TWO");
-    backtwo(strip.Color(0,   0,   0), 1000); // Red
+    collageled(strip.Color(0,   0,   0), 1000); // Red
   } 
   if (request.indexOf("/collage") != -1){
     Serial.println("COLLAGE"); 
@@ -152,58 +155,58 @@ void colorWipe(uint32_t color, int wait) {
   }
 }
 
-void back(uint32_t color, int wait){
+void photoled(uint32_t color, int wait){
 
-  strip.fill(strip.Color(255,   255,   255),2,60);
+  strip.fill(strip.Color(255,   255,   255),2, ledCount);
   strip.show();
   delay(1000);
   
-  int p=60;
+  int p=ledCount;
  
   for(int i=0;i<strip.numPixels();) { // For each pixel in strip...
     strip.fill(color,i,12);
     strip.fill(color,p,0);
 
     strip.show();                          //  Update strip to match
-    if (i>=60){
+    if (i>=ledCount){
       delay(100);
       break;
     }
 
-    p = p - 0; 
-    i = i + 12;
+    p = p - cntdwnPhoto; 
+    i = i + cntdwnPhoto;
     delay(wait); 
   } 
   stripClear();
-  
+
 }
 
-void backtwo(uint32_t color, int wait){
+void collageled(uint32_t color, int wait){
 
-  strip.fill(strip.Color(255,   255,   255),2,91);
+  strip.fill(strip.Color(255,   255,   255),2,ledCount);
   strip.show();
   delay(1000);
   
-  int p=60;
+  int p=ledCount;
  
   for(int i=0;i<strip.numPixels();) { // For each pixel in strip...
-    strip.fill(color,i,30);
+    strip.fill(color,i,cntdwnCollage);
     strip.fill(color,p,0);
 
     strip.show();                          //  Update strip to match
-    if (i>=60){
+    if (i>=ledCount){
       delay(100);
       break;
     }
 
-    p = p - 0; 
-    i = i + 30;
+    p = p - cntdwnCollage; 
+    i = i + cntdwnCollage;
     delay(wait); 
     Serial.println(p);
     Serial.println(i);
   } 
   stripClear();
-  
+
 }
 
 void rainbow(int wait) {
