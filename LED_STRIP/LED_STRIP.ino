@@ -177,13 +177,10 @@ void photoled(uint32_t color, int wait){
   strip.fill(strip.Color(255,255,255),2, LED_COUNT);
   strip.show();
   delay(1000);
-  
-  int p=LED_COUNT;
 
   // For each pixel in strip...
   for(int i=0;i<strip.numPixels();) {
     strip.fill(color,i,cntdwnPhoto);
-    strip.fill(color,p,cntdwnPhoto);
 
     // Update strip to match
     strip.show();
@@ -203,13 +200,10 @@ void collageled(uint32_t color, int wait){
   strip.fill(strip.Color(255,255,255),2,LED_COUNT);
   strip.show();
   delay(1000);
-  
-  int p=LED_COUNT;
 
   // For each pixel in strip...
   for(int i=0;i<strip.numPixels();) {
     strip.fill(color,i,cntdwnCollage);
-    strip.fill(color,p,cntdwnCollage);
 
     // Update strip to match
     strip.show();
