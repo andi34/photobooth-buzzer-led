@@ -1,8 +1,7 @@
- /*
+/*
  * ESP8266 LED STRIPE for Photobooth > https://github.com/andi34/photobooth
  * Raphael Schib (https://github.com/flighter18)
  */
-
 
 #include <ESP8266WiFi.h>
 #include <Adafruit_NeoPixel.h>
@@ -10,47 +9,58 @@
  #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
 #endif
 
-// Which pin on the Arduino is connected to the NeoPixels?
-// On a Trinket or Gemma we suggest changing this to 1:
-#define LED_PIN    D4
 
-// How many NeoPixels are attached to the Arduino?
-#define LED_COUNT 94
+//
+// U S E R S E T U P  S T A R T S  H E R E
+//
+
+// NeoPixels connected pin
+#define LED_PIN D4
+
+// NeoPixels count
+#define LED_COUNT 60
+
+// ADD SSID AND PASSWORD
+// *****************************
+const char* ssid = "YOUR SSID";
+const char* password = "YOUR PASSWORD";
+
+// ADD NETWORK SETTINGS
+IPAddress ip(xx,xx,xx,xx);         // where xx is the desired IP Address
+IPAddress gateway(xx,xx,xx,xx);  // set gateway to match your network
+IPAddress subnet(255, 255, 255, 0); // set subnet mask to match your network
+
+// NeoPixels changing on Photo Countdown (value = LED_COUNT / Countdown in seconds), Photbooth defaults to 10 seconds
+int cntdwnPhoto = 6;
+// NeoPixels changing on Collage Countdown (value = LED_COUNT / Countdown in seconds), Photbooth defaults to 5 seconds
+int cntdwnCollage = 12;
+// Set BRIGHTNESS to about 1/5 (max = 255)
+int brightness = 150;
+
+//
+// U S E R S E T U P  E N D S  H E R E
+//
 
 // Declare our NeoPixel strip object:
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
-// ADD SSID AND PASSWORD!!!!
-// *****************************
-const char* ssid = "";
-const char* password = "";
- 
-int ledPin = D5;
-
 WiFiServer server(80);
-IPAddress ip(x,x,x,x); // where xx is the desired IP Address
-IPAddress gateway(255, 255, 255, 0); // set gateway to match your network
- 
+
 void setup() {
   Serial.begin(115200);
   delay(10);
- 
- 
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
- 
+
   Serial.print(F("Setting static ip to : "));
   Serial.println(ip);
- 
+
   // Connect to WiFi network
   Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
-  IPAddress subnet(255, 255, 255, 0); // set subnet mask to match your network
   WiFi.config(ip, gateway, subnet); 
   WiFi.begin(ssid, password);
- 
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -67,16 +77,27 @@ void setup() {
   Serial.print("http://");
   Serial.print(WiFi.localIP());
   Serial.println("/");
+  Serial.println("");
 
-   //LED STRIP
+  // LED STRIP
+  Serial.print("LED Count: ");
+  Serial.println(LED_COUNT);
+  Serial.print("Turn off count for photo: ");
+  Serial.println(cntdwnPhoto);
+  Serial.print("Turn off count for collage: ");
+  Serial.println(cntdwnCollage);
+  Serial.println("");
+
   #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
   clock_prescale_set(clock_div_1);
-   #endif
+  #endif
   // END of Trinket-specific code.
 
-  strip.begin();           // INITIALIZE NeoPixel strip object (REQUIRED)
-  strip.show();            // Turn OFF all pixels ASAP
-  strip.setBrightness(150); // Set BRIGHTNESS to about 1/5 (max = 255)
+  // INITIALIZE NeoPixel strip object (REQUIRED)
+  strip.begin();
+  // Turn OFF all pixels ASAP
+  strip.show();
+  strip.setBrightness(brightness);
 }
  
 void loop() {
@@ -97,18 +118,18 @@ void loop() {
   String request = client.readStringUntil('\r');
   Serial.println(request);
   client.flush();
- 
-  // Match the request
- 
   int value = LOW;
 
-  if (request.indexOf("/BACK") != -1) {
-    Serial.println("BACK");
-    back(strip.Color(0,   0,   0), 1000); // Red
+  // Match the request
+  if (request.indexOf("/CNTDWNPHOTO") != -1) {
+    Serial.println("PHOTO COUNTDOWN");
+    // Red
+    photoled(strip.Color(0,   0,   0), 1000);
   } 
-  if (request.indexOf("/TWO") != -1) {
-    Serial.println("TWO");
-    backtwo(strip.Color(0,   0,   0), 1000); // Red
+  if (request.indexOf("/CNTDWNCOLLAGE") != -1) {
+    Serial.println("COLLAGE COUNTDOWN");
+    // Red
+    collageled(strip.Color(0,   0,   0), 1000);
   } 
   if (request.indexOf("/collage") != -1){
     Serial.println("COLLAGE"); 
@@ -123,7 +144,6 @@ void loop() {
     rainbow(4);
   }
  
- 
   // Return the response
   client.println("HTTP/1.1 200 OK");
   client.println("Content-Type: text/html");
@@ -132,78 +152,76 @@ void loop() {
   client.println("<html>");
  
   client.println("<br><br>");
-  client.println("Click <a href=\"/BACK\">here</a> to start the countdownback | BACK<br>");
-  client.println("Click <a href=\"/TWO\">here</a> to start the countdownback | TWO<br>");
-  client.println("Click <a href=\"/collage\">here</a> to start collage<br>");
-  client.println("Click <a href=\"/photo\">here</a> to start photo<br>");
-  client.println("Click <a href=\"/chroma\">here</a> to start chroma photo<br>");
+  client.println("Click <a href=\"/CNTDWNPHOTO\">here</a> to start the animation visible for photo countdown<br>");
+  client.println("Click <a href=\"/CNTDWNCOLLAGE\">here</a> to start the animation visible for collage countdown<br>");
+  client.println("Click <a href=\"/collage\">here</a> to start the animation visible once a collage was processed<br>");
+  client.println("Click <a href=\"/photo\">here</a> to start the animation visible once a photo was processed<br>");
+  client.println("Click <a href=\"/chroma\">here</a> to start the animation visible once a chroma photo was processed<br>");
   client.println("</html>");
  
   delay(1);
-  Serial.println("Client disconnected");
+  Serial.println("Client disconnected.");
   Serial.println("");
 }
 
 void colorWipe(uint32_t color, int wait) {
   for(int i=0; i<strip.numPixels(); i++) { // For each pixel in strip...
-    strip.setPixelColor(i, color);         //  Set pixel's color (in RAM)
-    strip.show();                          //  Update strip to match
-    delay(wait);                           //  Pause for a moment
+    strip.setPixelColor(i, color);         // Set pixel's color (in RAM)
+    strip.show();                          // Update strip to match
+    delay(wait);                           // Pause for a moment
   }
 }
 
-void back(uint32_t color, int wait){
+void photoled(uint32_t color, int wait){
 
-  strip.fill(strip.Color(255,   255,   255),2,90);
+  strip.fill(strip.Color(255,255,255),2, LED_COUNT);
   strip.show();
   delay(1000);
   
-  int p=38;
- 
-  for(int i=47;i<strip.numPixels();) { // For each pixel in strip...
-    strip.fill(color,i,9);
-    strip.fill(color,p,9);
+  int p=LED_COUNT;
 
-    strip.show();                          //  Update strip to match
-    if (i>=76){
+  // For each pixel in strip...
+  for(int i=0;i<strip.numPixels();) {
+    strip.fill(color,i,cntdwnPhoto);
+    strip.fill(color,p,cntdwnPhoto);
+
+    // Update strip to match
+    strip.show();
+    if (i>=LED_COUNT){
       delay(100);
       break;
     }
+    i = i + cntdwnPhoto;
+    delay(wait);
+  }
 
-    p = p - 9; 
-    i = i + 9;
-    delay(wait); 
-  } 
   stripClear();
-  
 }
 
-void backtwo(uint32_t color, int wait){
+void collageled(uint32_t color, int wait){
 
-  strip.fill(strip.Color(255,   255,   255),2,91);
+  strip.fill(strip.Color(255,255,255),2,LED_COUNT);
   strip.show();
   delay(1000);
   
-  int p=24;
- 
-  for(int i=47;i<strip.numPixels();) { // For each pixel in strip...
-    strip.fill(color,i,23);
-    strip.fill(color,p,23);
+  int p=LED_COUNT;
 
-    strip.show();                          //  Update strip to match
-    if (i>=70){
+  // For each pixel in strip...
+  for(int i=0;i<strip.numPixels();) {
+    strip.fill(color,i,cntdwnCollage);
+    strip.fill(color,p,cntdwnCollage);
+
+    // Update strip to match
+    strip.show();
+    if (i>=LED_COUNT){
       delay(100);
       break;
     }
-
-    p = p - 23; 
-    i = i + 23;
+    i = i + cntdwnCollage;
     delay(wait); 
-    Serial.println(p);
-    Serial.println(i);
   } 
-  stripClear();
   
+  stripClear();
 }
 
 void rainbow(int wait) {
