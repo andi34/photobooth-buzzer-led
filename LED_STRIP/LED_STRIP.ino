@@ -24,36 +24,33 @@ Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 // *****************************
 const char* ssid = "EURE SSID EINTRAGEN";
 const char* password = "EUER PASSWORT FÜR WLAN";
- 
-int ledPin = D5;
+
 int ledCount = 60; // NeoPixels attached
 int cntdwnPhoto = 12; // led changing on Photo Countdown (value = ledCount / Countdown in seconds)
 int cntdwnCollage = 30; // led changing on Collage Countdown (value = ledCount / Countdown in seconds)
 
+int brightness = 150; // Set BRIGHTNESS to about 1/5 (max = 255)
+
 WiFiServer server(80);
 IPAddress ip(XXX,XXX,XXX,XXX); // where xx is the desired IP Address
 IPAddress gateway(255, 255, 255, 0); // set gateway to match your network
- 
+IPAddress subnet(255, 255, 255, 0); // set subnet mask to match your network
+
 void setup() {
   Serial.begin(115200);
   delay(10);
- 
- 
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
- 
+
   Serial.print(F("Setting static ip to : "));
   Serial.println(ip);
- 
+
   // Connect to WiFi network
   Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
-  IPAddress subnet(255, 255, 255, 0); // set subnet mask to match your network
   WiFi.config(ip, gateway, subnet); 
   WiFi.begin(ssid, password);
- 
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -71,15 +68,15 @@ void setup() {
   Serial.print(WiFi.localIP());
   Serial.println("/");
 
-   //LED STRIP
+  //LED STRIP
   #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
   clock_prescale_set(clock_div_1);
-   #endif
+  #endif
   // END of Trinket-specific code.
 
   strip.begin();           // INITIALIZE NeoPixel strip object (REQUIRED)
   strip.show();            // Turn OFF all pixels ASAP
-  strip.setBrightness(150); // Set BRIGHTNESS to about 1/5 (max = 255)
+  strip.setBrightness(brightness);
 }
  
 void loop() {
