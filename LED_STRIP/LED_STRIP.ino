@@ -36,15 +36,15 @@ int cntdwnPhoto = 6;
 int cntdwnCollage = 12;
 // Set BRIGHTNESS to about 1/5 (max = 255)
 int brightness = 150;
-// LED Color
-uint32_t color = strip.Color(0,   0,   0);
-
-//
-// U S E R S E T U P  E N D S  H E R E
-//
 
 // Declare our NeoPixel strip object:
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+// LED Colors
+uint32_t color = strip.Color(0,   0,   0);
+uint32_t fillColor = strip.Color(255, 255, 255);
+//
+// U S E R S E T U P  E N D S  H E R E
+//
 
 WiFiServer server(80);
 
@@ -174,7 +174,7 @@ void colorWipe(uint32_t color, int wait) {
 
 void photoled(int wait){
 
-  strip.fill(strip.Color(255,255,255),2, LED_COUNT);
+  strip.fill(fillColor,2, LED_COUNT);
   strip.show();
   delay(1000);
 
@@ -197,7 +197,7 @@ void photoled(int wait){
 
 void collageled(int wait){
 
-  strip.fill(strip.Color(255,255,255),2,LED_COUNT);
+  strip.fill(fillColor,2,LED_COUNT);
   strip.show();
   delay(1000);
 
