@@ -36,6 +36,8 @@ int cntdwnPhoto = 6;
 int cntdwnCollage = 12;
 // Set BRIGHTNESS to about 1/5 (max = 255)
 int brightness = 150;
+// LED Color
+uint32_t color = strip.Color(0,   0,   0);
 
 //
 // U S E R S E T U P  E N D S  H E R E
@@ -123,13 +125,11 @@ void loop() {
   // Match the request
   if (request.indexOf("/CNTDWNPHOTO") != -1) {
     Serial.println("PHOTO COUNTDOWN");
-    // Red
-    photoled(strip.Color(0,   0,   0), 1000);
+    photoled(1000);
   } 
   if (request.indexOf("/CNTDWNCOLLAGE") != -1) {
     Serial.println("COLLAGE COUNTDOWN");
-    // Red
-    collageled(strip.Color(0,   0,   0), 1000);
+    collageled(1000);
   } 
   if (request.indexOf("/collage") != -1){
     Serial.println("COLLAGE"); 
@@ -172,7 +172,7 @@ void colorWipe(uint32_t color, int wait) {
   }
 }
 
-void photoled(uint32_t color, int wait){
+void photoled(int wait){
 
   strip.fill(strip.Color(255,255,255),2, LED_COUNT);
   strip.show();
@@ -195,7 +195,7 @@ void photoled(uint32_t color, int wait){
   stripClear();
 }
 
-void collageled(uint32_t color, int wait){
+void collageled(int wait){
 
   strip.fill(strip.Color(255,255,255),2,LED_COUNT);
   strip.show();
