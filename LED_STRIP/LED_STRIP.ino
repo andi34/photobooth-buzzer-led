@@ -42,6 +42,7 @@ Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 // LED Colors
 uint32_t color = strip.Color(0,   0,   0);
 uint32_t fillColor = strip.Color(255, 255, 255);
+
 //
 // U S E R S E T U P  E N D S  H E R E
 //
@@ -125,11 +126,11 @@ void loop() {
   // Match the request
   if (request.indexOf("/CNTDWNPHOTO") != -1) {
     Serial.println("PHOTO COUNTDOWN");
-    photoled(1000);
+    photoled(1000, cntdwnPhoto);
   } 
   if (request.indexOf("/CNTDWNCOLLAGE") != -1) {
     Serial.println("COLLAGE COUNTDOWN");
-    collageled(1000);
+    photoled(1000, cntdwnCollage);
   } 
   if (request.indexOf("/collage") != -1){
     Serial.println("COLLAGE"); 
@@ -172,7 +173,7 @@ void colorWipe(uint32_t color, int wait) {
   }
 }
 
-void photoled(int wait){
+void photoled(int wait, int ledChange) {
 
   strip.fill(fillColor,2, LED_COUNT);
   strip.show();
@@ -180,7 +181,7 @@ void photoled(int wait){
 
   // For each pixel in strip...
   for(int i=0;i<strip.numPixels();) {
-    strip.fill(color,i,cntdwnPhoto);
+    strip.fill(color,i,ledChange);
 
     // Update strip to match
     strip.show();
@@ -188,33 +189,10 @@ void photoled(int wait){
       delay(100);
       break;
     }
-    i = i + cntdwnPhoto;
+    i = i + ledChange;
     delay(wait);
   }
 
-  stripClear();
-}
-
-void collageled(int wait){
-
-  strip.fill(fillColor,2,LED_COUNT);
-  strip.show();
-  delay(1000);
-
-  // For each pixel in strip...
-  for(int i=0;i<strip.numPixels();) {
-    strip.fill(color,i,cntdwnCollage);
-
-    // Update strip to match
-    strip.show();
-    if (i>=LED_COUNT){
-      delay(100);
-      break;
-    }
-    i = i + cntdwnCollage;
-    delay(wait); 
-  } 
-  
   stripClear();
 }
 
