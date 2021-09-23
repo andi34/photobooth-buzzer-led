@@ -175,6 +175,8 @@ void colorWipe(uint32_t color, int wait) {
 
 void photoled(int wait, int ledChange) {
   int ledLimit = ledChange * 2;
+  int p = LED_COUNT;
+
   strip.fill(fillColor,2, LED_COUNT);
   strip.show();
   delay(1000);
@@ -194,7 +196,7 @@ void photoled(int wait, int ledChange) {
       break;
     }
     i = i + ledChange;
-    int p = LED_COUNT - ledChange;
+    p = p - ledChange;
     delay(wait);
   }
 
