@@ -185,6 +185,7 @@ void photoled(int wait, int ledChange) {
   for(int i=0;i<strip.numPixels();) {
     if (ledLimit > p) {
       strip.fill(color,i + p ,p);
+      i = i + p;
     } else {
       strip.fill(color,i,ledChange);
     }
