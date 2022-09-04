@@ -70,7 +70,12 @@ void setup() {
   }
   Serial.println("");
   Serial.println("WiFi connected");
- 
+  Serial.println(WiFi.localIP());
+
+  // reconnect automatically after lost connection
+  WiFi.setAutoReconnect(true);
+  WiFi.persistent(true);
+
   // Start the server
   server.begin();
   Serial.println("Server started");
