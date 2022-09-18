@@ -107,7 +107,14 @@ void setup() {
   strip.show();
   strip.setBrightness(brightness);
 }
- 
+
+void setCrossOrigin() {
+  server.sendHeader(F("Access-Control-Allow-Origin"), F("*"));
+  server.sendHeader(F("Access-Control-Max-Age"), F("600"));
+  server.sendHeader(F("Access-Control-Allow-Methods"), F("PUT,POST,GET,OPTIONS"));
+  server.sendHeader(F("Access-Control-Allow-Headers"), F("*"));
+}
+
 void loop() {
   // Check if a client has connected
   WiFiClient client = server.available();
