@@ -206,6 +206,7 @@ void photoled(int wait, int ledChange) {
     delay(wait);
   }
 
+  delay(2000);
   stripClear();
 }
 
@@ -231,6 +232,7 @@ void rainbow(int wait) {
     strip.show(); // Update strip with new contents
     delay(wait);  // Pause for a moment
   }
+  delay(2000);
   stripClear();
 }
 
@@ -253,6 +255,7 @@ void theaterChaseRainbow(int wait) {
       firstPixelHue += 65536 / 90; // One cycle of color wheel over 90 frames
     }
   }
+  delay(2000);
   stripClear();
 }
 
