@@ -61,6 +61,7 @@ void setup() {
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
+  WiFi.mode(WIFI_STA);
   WiFi.config(ip, gateway, subnet); 
   WiFi.begin(ssid, password);
 
@@ -71,6 +72,8 @@ void setup() {
   Serial.println("");
   Serial.println("WiFi connected");
   Serial.println(WiFi.localIP());
+
+  WiFi.setSleep(false);
 
   // reconnect automatically after lost connection
   WiFi.setAutoReconnect(true);
